@@ -1,0 +1,13 @@
+## Mysql
+dockerHub地址：https://hub.docker.com/_/mysql
+// 下载mysql
+docker pull mysql:latest
+
+// step1 创建网络web-net
+docker network create web-net
+
+// step2 启动mysql容器。MYSQL_ROOT_PASSWORD：初始化root用户的密码
+docker run --name mysql01 --network web-net -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql:latest
+
+// step3 启动一个新的mysql容器，在新容器里通过mysql命令连接step2的容器。--rm：在容器退出时自动删除它
+docker run -it --network=web-net --rm mysql mysql -hmysql01 -uroot -p123456
