@@ -43,3 +43,15 @@ dockerHub地址：https://hub.docker.com/r/gvenzl/oracle-xe
 
 - step3 链接数据库
 > sqlplus SYSTEM/123456@localhost:1521/XE
+
+# Zookeeper
+dockerHub地址：https://hub.docker.com/_/zookeeper
+
+- 下载zookeeper
+> docker pull zookeeper:latest
+> 
+- step2 启动容器
+> docker run --name some-zookeeper --restart always -d zookeeper
+
+- step3 链接服务
+> docker run -it --rm --link some-zookeeper:zookeeper zookeeper zkCli.sh -server zookeeper
