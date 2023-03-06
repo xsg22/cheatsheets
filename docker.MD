@@ -55,3 +55,15 @@ dockerHub地址：https://hub.docker.com/_/zookeeper
 
 - step2 链接服务
 > docker run -it --rm --link some-zookeeper:zookeeper zookeeper zkCli.sh -server zookeeper
+
+# Reids
+dockerHub地址：https://hub.docker.com/_/redis
+
+- 下载redis
+> docker pull redis:latest
+> 
+- step1 启动容器
+> docker run --name some-redis -p 6349:6349 -d redis
+
+- step2 链接服务
+> docker exec -it <容器id> redis-cli
