@@ -80,3 +80,18 @@ dockerHub地址：https://hub.docker.com/r/bitnami/kafka
 
 - step2 链接服务
 > docker run -it --rm --network web-net -e KAFKA_CFG_ZOOKEEPER_CONNECT=my-zookeeper:2181 bitnami/kafka:latest kafka-topics.sh --list  --bootstrap-server my-kafka:9092
+
+
+# xxl-job
+dockerHub地址：https://hub.docker.com/r/xuxueli/xxl-job-admin
+
+- 下载image
+> docker docker run xuxueli/xxl-job-admin:2.4.0
+
+- step1 启动容器，注意mysql的host和密码要修改成对应的值
+> docker run --name my-xxl-job --network=web-net -p 8080:8080 -e PARAMS="--spring.datasource.url=jdbc:mysql://my-mysql:3306/xxl_job?useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=Asia/Shanghai --spring.datasource.password=123456" -d xuxueli/xxl-job-admin:2.4.0
+
+- step2 访问后台
+- http://localhost:8080/xxl-job-admin/jobinfo
+- 默认账号：admin/123456
+
