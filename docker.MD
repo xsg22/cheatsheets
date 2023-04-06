@@ -63,7 +63,7 @@ dockerHub地址：https://hub.docker.com/_/redis
 > docker pull redis:latest
 > 
 - step1 启动容器
-> docker run --name some-redis --network=web-net -p 6349:6349 -d redis
+> docker run --name my-redis --network=web-net -p 6349:6349 -d redis
 
 - step2 链接服务
 > docker exec -it <容器id> redis-cli
