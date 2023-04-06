@@ -8,7 +8,7 @@ dockerHub地址：https://hub.docker.com/_/mysql
 > docker network create web-net
 
 - step2 启动mysql容器。MYSQL_ROOT_PASSWORD：初始化root用户的密码
-> docker run --name mysql01 --network web-net -e MYSQL_ROOT_PASSWORD=123456 -p 3306:3306 -d mysql:latest
+> docker run --name my-mysql --network web-net -p 3306:3306 -e MYSQL_ROOT_PASSWORD=123456 -d mysql:latest
 
 - step3 启动一个新的mysql容器，在新容器里通过mysql命令连接step2的容器。--rm：在容器退出时自动删除它
 > docker run -it --network=web-net --rm mysql mysql -hmysql01 -uroot -p123456
@@ -24,7 +24,7 @@ dockerHub地址：https://hub.docker.com/_/postgres
 > docker network create web-net
 
 - step2 启动postgres容器。POSTGRES_PASSWORD：初始化root用户的密码
-> docker run --network=web-net -p 5432:5432 --name postgres01 -e POSTGRES_PASSWORD=123456 -d postgres
+> docker run --name my-postgres --network=web-net -p 5432:5432 -e POSTGRES_PASSWORD=123456 -d postgres
 
 - step3 启动一个新的postgres容器，在新容器里通过postgres命令连接step2的容器。--rm：在容器退出时自动删除它
 > docker run -it --rm --network web-net postgres psql -h postgres01 -U postgres
@@ -36,7 +36,7 @@ dockerHub地址：https://hub.docker.com/r/gvenzl/oracle-xe
 > docker pull gvenzl/oracle-xe
 
 - step1 启动oracle容器。ORACLE_PASSWORD：初始化SYS和SYSTEM用户的密码
-> docker run -p 1521:1521 --name oracle01 -e ORACLE_PASSWORD=123456 -d gvenzl/oracle-xe
+> docker run --name my-oracle --network=web-net -p 1521:1521 -e ORACLE_PASSWORD=123456 -d gvenzl/oracle-xe
 
 - step2 进入容器
 > docker exec -it 9664c462f109 bash
@@ -51,10 +51,10 @@ dockerHub地址：https://hub.docker.com/_/zookeeper
 > docker pull zookeeper:latest
 > 
 - step1 启动容器
-> docker run --name some-zookeeper --restart always -d zookeeper
+> docker run --name my-zookeeper --network=web-net -p 2181:2181 -e ALLOW_ANONYMOUS_LOGIN=yes --restart always -d zookeeper
 
 - step2 链接服务
-> docker run -it --rm --link some-zookeeper:zookeeper zookeeper zkCli.sh -server zookeeper
+> docker run -it --rm --link my-zookeeper:zookeeper zookeeper zkCli.sh -server zookeeper
 
 # Reids
 dockerHub地址：https://hub.docker.com/_/redis
@@ -63,7 +63,20 @@ dockerHub地址：https://hub.docker.com/_/redis
 > docker pull redis:latest
 > 
 - step1 启动容器
-> docker run --name some-redis -p 6349:6349 -d redis
+> docker run --name some-redis --network=web-net -p 6349:6349 -d redis
 
 - step2 链接服务
 > docker exec -it <容器id> redis-cli
+
+# Kafka
+dockerHub地址：https://hub.docker.com/r/bitnami/kafka
+
+- 下载kafka
+> docker pull bitnami/kafka:latest
+
+- step1 启动容器
+> docker run --name my-kafka --network=web-net -p 9092:9092 -e ALLOW_PLAINTEXT_LISTENER=yes -e KAFKA_CFG_ZOOKEEPER_CONNECT=my-zookeeper:2181
+-d bitnami/kafka:latest
+
+- step2 链接服务
+> docker run -it --rm --network web-net -e KAFKA_CFG_ZOOKEEPER_CONNECT=my-zookeeper:2181 bitnami/kafka:latest kafka-topics.sh --list  --bootstrap-server my-kafka:9092
